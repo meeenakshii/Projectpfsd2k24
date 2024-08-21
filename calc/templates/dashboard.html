@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Dashboard</h1>
+&nbsp;
+<table class="table">
+    <tr>
+        <th>View</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Height</th>
+        <th>Weight</th>
+        <th>Date of Birth</th>
+        <th>Date</th>
+        <th>Category</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td><a href="{% url 'user' user.id %}">View</a></td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.age }}</td>
+        <td>{{ user.height }}</td>
+        <td>{{ user.weight }}</td>
+        <td>{{ user.dob }}</td>
+        <td>{{ user.date }}</td>
+        <td>{{ user.category }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'home' %}"><button type="button" class="btn btn-success">Home Window</button></a>
+{% endblock %}
