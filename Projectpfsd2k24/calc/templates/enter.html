@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Background -->
+<div class="background"></div>
+
+<!-- Overlay -->
+<div class="overlay"></div>
+
+<!-- Centered content -->
+<div class="container">
+    <h1 class="welcome-message">Welcome, {{ name }}!</h1>
+    <p class="intro-text">Are you ready for your lifestyle to improve? You're one step ahead! Let's gooo!</p>
+
+    <!-- Start Quiz button -->
+    <form method="GET" action="{% url 'quiz' %}" class="quiz-form">
+        <button type="submit" class="start-quiz-button">
+            Start Quiz
+        </button>
+    </form>
+</div>
+
+<style>
+    /* Styles for the body */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif; /* Default font */
+        color: #fff; /* Default text color for readability */
+        position: relative; /* Position relative for proper stacking */
+        overflow: hidden; /* Prevent scrollbars */
+    }
+
+    /* Background */
+    .background {
+        background-image: url("{% static 'images/homeb2.png' %}"); /* Correct path to your image */
+        background-size: cover; /* Ensure the background covers the whole screen */
+        background-position: center; /* Center the background image */
+        background-repeat: no-repeat; /* Prevent the background from repeating */
+        height: 100vh; /* Full height of the viewport */
+        width: 100vw; /* Full width of the viewport */
+        position: absolute; /* Position absolute for full coverage */
+        top: 0; /* Align to the top */
+        left: 0; /* Align to the left */
+        z-index: 0; /* Background layer */
+    }
+
+    /* Overlay */
+    .overlay {
+        position: fixed; /* Fixed positioning to cover the entire viewport */
+        top: 0; /* Align to the top */
+        left: 0; /* Align to the left */
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        background-color: rgba(0, 0, 0, 0.3); /* Black overlay with 50% opacity */
+        z-index: 1; /* Ensure the overlay is above the background */
+    }
+
+    /* Container for centered content */
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full viewport height */
+        padding: 20px;
+        z-index: 2; /* Ensure container is above the overlay */
+        position: relative; /* Position relative for z-index to work */
+    }
+
+    /* Styles for welcome message */
+    .welcome-message {
+        text-align: center;
+        font-size: 3em; /* Larger font size */
+        letter-spacing: 2px; /* Add letter spacing */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for depth */
+        animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+    }
+
+    /* Styles for introductory text */
+    .intro-text {
+        text-align: center;
+        margin-bottom: 30px; /* Space below the text */
+        font-size: 1.5em; /* Increase font size */
+        letter-spacing: 1px; /* Add letter spacing */
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+        animation: slideIn 1s ease-in-out; /* Slide-in animation */
+    }
+
+    /* Styles for the quiz button */
+    .start-quiz-button {
+        padding: 10px 20px;
+        background-color: darkgreen; /* Button color */
+        color: white; /* Text color */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 1.2em; /* Font size */
+        text-transform: uppercase; /* Uppercase text */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+    /* Change button color on hover */
+    .start-quiz-button:hover {
+        background-color: #4CAF50; /* Lighter green on hover */
+    }
+
+    /* Animation keyframes */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+{% endblock %}

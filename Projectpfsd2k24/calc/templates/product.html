@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Products</h1>
+&nbsp;
+<table class="table">
+<tr>
+<th>Name</th>
+<th>Price</th>
+</tr>
+{% for goal in goals %}
+<tr>
+<td>{{goal.name}}</td>
+<td>{{goal.price}}</td>
+</tr>
+{% endfor %}
+</table>
+<a href="{% url 'home' %}"><button type="button" class="btn btn-success">Home Window</button></a>
+{% endblock %}

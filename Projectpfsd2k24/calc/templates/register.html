@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 style="margin-top: 70px; padding-left: 0.3in;">Register</h2>
+
+<!-- Registration form with left alignment and 0.3-inch gap -->
+<form method="POST" action="" style="padding-left: 0.3in; margin-top: 20px;"> <!-- Added margin-top here -->
+    {% csrf_token %}
+    
+    <!-- Render the form fields including username and password without any enable/disable options -->
+    {{ form.as_p }}  <!-- Renders the form fields including username and password -->
+    
+    <!-- Password feedback message -->
+    <div id="passwordFeedback" style="margin-top: 10px; color: red; display: none;">
+        <span id="feedbackText"></span>
+    </div>
+    
+    <!-- Register button -->
+    <button type="submit" style="padding: 10px 20px; background-color: #006400; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.2em; text-transform: uppercase;">
+        Register Now
+    </button>
+</form>
+
+<!-- Display success or error messages below the form, also aligned to the left -->
+<div style="margin-top: 20px; padding-left: 0.3in;">
+    {% for message in messages %}
+        <div>{{ message }}</div>  <!-- Display feedback (success/errors) aligned to the left -->
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const passwordField = document.querySelector('input[name="password1"]'); // Adjust the name to match your form
+        const feedbackDiv = document.getElementById('passwordFeedback');
+        const feedbackText = document.getElementById('feedbackText');
+
+        passwordField.addEventListener('input', function() {
+            const password = passwordField.value;
+            const isValid = validatePassword(password);
+            
+            if (isValid) {
+                feedbackText.textContent = "Password is strong!";
+                feedbackText.style.color = "green";
+                feedbackDiv.style.display = "block";
+            } else {
+                feedbackText.textContent = "Password must be at least 8 characters long and include a mix of letters, numbers, and symbols.";
+                feedbackText.style.color = "red";
+                feedbackDiv.style.display = "block";
+            }
+        });
+
+        function validatePassword(password) {
+            // Example validation rules
+            const minLength = 8;
+            const hasLetters = /[a-zA-Z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password);
+            const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            return password.length >= minLength && hasLetters && hasNumbers && hasSpecialChars;
+        }
+    });
+</script>
+
+{% endblock %}

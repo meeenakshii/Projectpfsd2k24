@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>User Details</h1>
+<p><strong>Name:</strong> {{ user.name }}</p>
+<p><strong>Age:</strong> {{ user.age }}</p>
+<p><strong>Height:</strong> {{ user.height }}</p>
+<p><strong>Weight:</strong> {{ user.weight }}</p>
+<p><strong>Date of Birth:</strong> {{ user.dob }}</p>
+<p><strong>Date:</strong> {{ user.date }}</p>
+<p><strong>Category:</strong> {{ user.category }}</p>
+<a href="{% url 'dashboard' %}"><button type="button" class="btn btn-secondary">Back to Dashboard</button></a>
+{% endblock %}
