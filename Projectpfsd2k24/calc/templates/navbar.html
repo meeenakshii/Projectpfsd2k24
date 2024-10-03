@@ -1,12 +1,12 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg" style="width: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background-color: rgba(255, 255, 255, 0.9) !important; border-bottom: 1px solid transparent; font-family: 'Footlight MT Light', sans-serif;">
     <!-- Logo or Brand Name -->
-    
+
     <!-- Navbar Toggle for Mobile View -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    
+
     <!-- Navbar Links -->
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ml-auto" style="margin-left: 10px;">
@@ -26,7 +26,7 @@
             </li>
             <!-- Performance Calendar -->
             <li class="nav-item" style="margin-right: 20px;">
-                <a class="nav-link" href="#" style="font-size: 1.25rem; color: black;">
+                <a class="nav-link" href="{% url 'performance_calendar' %}" style="font-size: 1.25rem; color: black;">
                     <img src="{% static 'images/calendar.png' %}" alt="Calendar" style="width: 20px; height: 20px; margin-right: 5px;">
                     Performance Calendar
                 </a>
@@ -42,34 +42,31 @@
             <li class="nav-item dropdown" style="margin-right: 20px;">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 1.25rem; color: black;">
                     <img src="{% static 'images/usero.png' %}" alt="User Options" style="width: 20px; height: 20px; margin-right: 5px;">
-                    User Options
+                    Profile
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #333;">
+                    <!-- Profile option -->
                     <a class="dropdown-item" href="#" style="font-size: 1.25rem; color: black;">
                         <img src="{% static 'images/profile.png' %}" alt="Profile" style="width: 20px; height: 20px; margin-right: 5px;">
                         Profile
                     </a>
+                    <!-- Settings option -->
                     <a class="dropdown-item" href="#" style="font-size: 1.25rem; color: black;">
                         <img src="{% static 'images/settings.png' %}" alt="Settings" style="width: 20px; height: 20px; margin-right: 5px;">
                         Settings
                     </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}" style="font-size: 1.25rem; color: black;">
-                        <img src="{% static 'images/logout.png' %}" alt="Logout" style="width: 20px; height: 20px; margin-right: 5px;">
-                        Logout
-                    </a>
                 </div>
             </li>
-            <!-- About Link -->
+            <!-- Logout Link (moved from dropdown to About's place) -->
             <li class="nav-item" style="margin-right: 20px;">
-                <a class="nav-link" href="#" style="font-size: 1.25rem; color: black;">
-                    <img src="{% static 'images/about.png' %}" alt="About" style="width: 20px; height: 20px; margin-right: 5px;">
-                    About
+                <a class="nav-link" href="{% url 'logout' %}" style="font-size: 1.25rem; color: black;">
+                    <img src="{% static 'images/logout.png' %}" alt="Logout" style="width: 20px; height: 20px; margin-right: 5px;">
+                    Logout
                 </a>
             </li>
         </ul>
     </div>
-    <div style="font-size: 2.0rem; font-weight: bold; color: #59826b; margin-right: 10px; font-family: 'Lucida Handwriting', sans-serif;">Pickur Health</div>
+    <div style="font-size: 2.0rem; font-weight: bold; color: #59826b; margin-right: 20px; font-family: 'Lucida Handwriting', sans-serif;">Pickur Health</div>
 </nav>
 
 <!-- Include Bootstrap and jQuery -->

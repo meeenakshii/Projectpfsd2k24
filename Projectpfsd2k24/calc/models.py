@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 class User(models.Model):
     CATEGORY_CHOICES = (
@@ -61,3 +64,13 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
+from django.db import models
+from django.contrib.auth.models import User  # If events are linked to users
+
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # Optional user association
+
+    def __str__(self):
+        return f"{self.name} on {self.date}"

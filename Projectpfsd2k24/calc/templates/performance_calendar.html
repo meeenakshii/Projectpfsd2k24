@@ -1,0 +1,637 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Navbar included from navbar.html -->
+{% include 'navbar.html' %}
+
+<!-- Main Page Container -->
+<div class="calendar-container">
+
+    <!-- Heading for Performance Calendar -->
+    <h2 class="calendar-heading">🗓️ Performance Calendar</h2>
+
+    <!-- Navigation Arrows for Month -->
+    <div class="month-navigation">
+        <button onclick="changeMonth(-1)" class="nav-arrow">&#10094;</button>
+        <span id="current-month">{{ current_month }} - {{ current_year }}</span>
+        <button onclick="changeMonth(1)" class="nav-arrow">&#10095;</button>
+    </div>
+
+    <!-- Calendar Section -->
+    <div class="calendars">
+        {% for month in months %}
+        <div class="calendar-month" style="display: {% if month.month == current_month %}block{% else %}none{% endif %};">
+            <h3 class="month-title">{{ month.year }} - {{ month.month_name }} 🌟 <span class="today-date">(Today: {{ today_date|date:"Y-m-d" }})</span></h3>
+            <table class="calendar-table">
+                <thead style="background-color: #3B6B8A; color: rgb(255, 255, 255);"> <!-- Example color -->
+                    <tr>
+                        <th>☀️ Sun</th>
+                        <th>🌙 Mon</th>
+                        <th>🌼 Tue</th>
+                        <th>🌷 Wed</th>
+                        <th>🌿 Thu</th>
+                        <th>🌞 Fri</th>
+                        <th>🌻 Sat</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for week in month.weeks %}
+                    <tr>
+                        {% for day in week %}
+                        <td class="calendar-cell" data-date="{{ month.year }}-{{ month.month }}-{{ day|default:'' }}"{% if day == today_date.day and month.year == today_date.year and month.month == today_date.month %} style="background-color: rgba(255, 165, 0, 0.3);" {% endif %}>
+                            {% if day %}
+                            <span class="calendar-date">{{ day }}</span>
+                            {% for event in important_events %}
+                            {% if event.date.day == day and event.date.year == month.year and event.date.month == month.month %}
+                            <div class="event-item">🌟 {{ event.name }}</div>
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                            &nbsp;
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- To-Do List Section -->
+    <div class="todo-list-container">
+        <h2 class="section-heading">📝 To-Do List</h2>
+        <form id="add-task-form" class="add-task-form">
+            <input type="text" id="task-name" placeholder="Add a new task..." class="task-input" required>
+            <button type="submit" class="submit-button">Add Task</button>
+        </form>
+    
+        <ul id="todo-list" class="todo-list">
+            <!-- To-Do items will be appended here -->
+        </ul>
+    </div>
+
+<!-- Event Modal (for adding events when clicking on calendar date) -->
+<div id="event-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEventModal()">&times;</span>
+        <h3 style="color: #2C3E50;">Add Event on <span id="selected-date"></span></h3>
+        <form action="{% url 'add_event' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="event_date" id="event-date">
+            <input type="text" name="event_name" placeholder="Event name..." class="modal-input" required>
+            <button type="submit" class="modal-button">Add Event</button>
+        </form>
+    </div>
+</div>
+<div class="container">
+
+    <div class="habits-container">
+        <h2>Daily Habits</h2>
+        <table class="habits-table">
+            <thead>
+                <tr>
+                    <th>Habit</th>
+                    <th>Goal</th>
+                    <th>Completed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>💧 Drinking Water</td>
+                    <td>8 Glasses</td>
+                    <td><input type="checkbox" class="habit-checkbox" data-habit="drinkingWater"></td>
+                </tr>
+                <tr>
+                    <td>🏃‍♂️ Exercising</td>
+                    <td></td>
+                    <td><input type="checkbox" class="habit-checkbox" data-habit="exercising"></td>
+                </tr>
+                <tr>
+                    <td>📓 Journaling</td>
+                    <td></td>
+                    <td><input type="checkbox" class="habit-checkbox" data-habit="journaling"></td>
+                </tr>
+                <tr>
+                    <td>🥗 Proper Meal</td>
+                    <td></td>
+                    <td><input type="checkbox" class="habit-checkbox" data-habit="properMeal"></td>
+                </tr>
+                <tr>
+                    <td>💤 Proper Sleep</td>
+                    <td></td>
+                    <td><input type="checkbox" class="habit-checkbox" data-habit="properSleep"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="submit-habits" class="submit-button">Done</button>
+    </div>
+    
+
+<!-- CSS Styling -->
+<style>
+     .container {
+        display: flex; /* Use flexbox to align child elements */
+        justify-content: space-between; /* Space them evenly */
+        margin-top: 20px; /* Space above the container */
+    }
+
+    .todo-container, .habits-container {
+        width: 45%; /* Adjust the width as needed */
+        margin: 0 10px; /* Margin between the two containers */
+    }
+
+    .habits-table {
+        width: 100%;
+        border-collapse: collapse; /* Collapse borders for cleaner look */
+    }
+
+    .habits-table th, .habits-table td {
+        padding: 10px; /* Padding for table cells */
+        border: 1px solid #ddd; /* Border around cells */
+        background-color: #2c3e505f;
+        text-align: left; /* Left align text */
+    }
+
+    .task-input {
+        padding: 10px; /* Padding for the input field */
+        width: calc(100% - 22px); /* Adjust width to fit */
+        margin-bottom: 10px; /* Space below input */
+    }
+
+    .submit-button {
+        padding: 10px; /* Padding for button */
+        background-color: #3B6B8A; /* Button color */
+        color: white; /* Button text color */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer on hover */
+    }
+
+    /* Optional: Style for checked checkboxes */
+    .habit-checkbox:checked {
+        accent-color: green; /* Change color for checked boxes */
+    }
+    .month-title {
+        color: #2C3E50; /* Dark blue color */
+    }
+    .calendar-container {
+        padding: 40px;
+        margin-top: 100px;
+        background-color: rgba(240, 248, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .calendar-heading {
+        text-align: center;
+        color: #2C3E50; /* Darker color for better visibility */
+        font-size: 3rem;
+        margin-bottom: 30px;
+    }
+
+    .month-navigation {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2C3E50;
+    }
+
+    .nav-arrow {
+        font-size: 1.5rem;
+        background-color: #2C3E50; /* Darker button background */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+    }
+
+    .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .calendar-table th, .calendar-table td {
+        padding: 30px;
+        border: 1px solid #ddd;
+    }
+
+    .calendar-cell {
+        padding: 20px;
+        border: 1px solid #ddd;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .calendar-date {
+        color: #1A4D2E; /* Darker green color */
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .event-item {
+        color: #22222b; /* Darker red color for event items */
+        font-weight: bold;
+    }
+
+    .todo-list-container, .add-event-section {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .section-heading {
+        color: #2C3E50; /* Darker section heading */
+        font-size: 2rem;
+    }
+
+    .add-task-form, .add-event-form {
+        margin-bottom: 20px;
+    }
+
+    .task-input, .event-input {
+        padding: 10px;
+        width: 50%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .submit-button {
+        padding: 10px;
+        background-color: #2C3E50; /* Darker button background */
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .todo-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .todo-item {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        color: #333; /* Dark color for task text */
+    }
+
+    .completed-task {
+        text-decoration: line-through;
+        color: gray; /* Completed tasks in gray */
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 40%;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    .modal-input {
+        padding: 10px;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .modal-button {
+        padding: 10px;
+        background-color: #2C3E50; /* Darker button background */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+        .calendar-heading {
+        text-align: center;
+        color: #2C3E50; /* Darker color for the heading */
+        font-size: 3rem;
+        margin-bottom: 30px;
+    }
+
+    .calendar-date {
+        color: #1A242F; /* Darker green color */
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .event-item {
+        color: #C0392B; /* You can keep this red or change it to a darker shade if preferred */
+        font-weight: bold;
+    }
+
+    .section-heading {
+        color: #2C3E50; /* Darker color for section headings */
+        font-size: 2rem;
+    }
+
+    .todo-item {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        color: #1A242F; /* Darker text color for to-do items */
+    }
+
+    .completed-task {
+        text-decoration: line-through;
+        color: gray; /* This can remain as is for completed tasks */
+    }
+    .habits-emojis {
+        font-size: 1.5rem; /* Adjust size as needed */
+        margin-top: 5px; /* Space above emojis */
+    }
+</style>
+
+
+<!-- JavaScript Functionality -->
+<script>
+    let currentMonth = {{ current_month }};
+    let currentYear = {{ current_year }};
+    const months = {{ months|safe }};
+    let importantEvents = {{ important_events|safe }}; // Start with events from the server
+    let todoTasks = []; // To-Do list tasks
+
+    // Load events and tasks from local storage on page load
+    window.onload = function() {
+        loadLocalStorageData();
+        addHabitCheckboxListeners();
+    };
+
+    // Load data from local storage
+    function loadLocalStorageData() {
+        const savedEvents = localStorage.getItem('importantEvents');
+        if (savedEvents) {
+            importantEvents = JSON.parse(savedEvents);
+            updateCalendarWithAllEvents();
+        }
+
+        const savedTasks = localStorage.getItem('todoTasks');
+        if (savedTasks) {
+            todoTasks = JSON.parse(savedTasks);
+            updateTodoList();
+        }
+    }
+
+    // Handle adding a new task
+    document.getElementById('add-task-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const taskName = document.getElementById('task-name').value.trim();
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+        if (taskName) {
+            addTaskToTodoList(taskName, today);
+            document.getElementById('task-name').value = ''; // Clear the input
+        }
+    });
+
+    // Add task to the To-Do list and local storage
+    function addTaskToTodoList(taskName, createdDate) {
+        const newTask = { name: taskName, createdDate, completed: false, completionTime: null };
+        todoTasks.push(newTask);
+        localStorage.setItem('todoTasks', JSON.stringify(todoTasks));
+        updateTodoList();
+    }
+
+    // Update the displayed To-Do list
+    function updateTodoList() {
+        const todoList = document.getElementById('todo-list');
+        todoList.innerHTML = ''; // Clear the current list
+
+        // Filter out tasks that should be removed (completed and older than 24 hours)
+        const currentTime = new Date().getTime(); // Get current time in milliseconds
+        todoTasks = todoTasks.filter(task => {
+            if (task.completed) {
+                const taskCompletionTime = new Date(task.completionTime).getTime();
+                return (currentTime - taskCompletionTime) < (24 * 60 * 60 * 1000); // Keep tasks completed within 24 hours
+            }
+            return true; // Keep incomplete tasks
+        });
+
+        // Save updated tasks to local storage
+        localStorage.setItem('todoTasks', JSON.stringify(todoTasks));
+
+        // Display the current tasks
+        todoTasks.forEach((task, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'todo-item';
+            listItem.innerHTML = `
+                <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index}, this)">
+                <span class="${task.completed ? 'completed-task' : ''}">${task.name}</span>
+            `;
+            todoList.appendChild(listItem);
+        });
+    }
+
+    // Toggle task completion
+    function toggleTask(index, checkbox) {
+        todoTasks[index].completed = checkbox.checked; // Update task completion status
+        todoTasks[index].completionTime = checkbox.checked ? new Date().toISOString() : null; // Store completion time
+        localStorage.setItem('todoTasks', JSON.stringify(todoTasks)); // Save to local storage
+        updateTodoList(); // Update the displayed list
+
+        const date = document.getElementById('selected-date').innerText; // Get the selected date
+        if (checkbox.checked) {
+            updateCalendarWithHabitsEmojis(date); // Update calendar with emojis when task is completed
+        } else {
+            unstrikeHabits(date); // Unstrike if unchecked (if needed)
+        }
+    }
+
+    // Change the current month
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        } else if (currentMonth < 1) {
+            currentMonth = 12;
+            currentYear--;
+        }
+        updateCalendar();
+    }
+
+    // Update the calendar display
+    function updateCalendar() {
+        document.getElementById('current-month').innerText = `${currentMonth} - ${currentYear}`;
+        const calendars = document.querySelectorAll('.calendar-month');
+
+        calendars.forEach(calendar => {
+            const monthNumber = parseInt(calendar.querySelector('.month-title').innerText.split(' - ')[1]);
+            calendar.style.display = (monthNumber === currentMonth && currentYear === parseInt(calendar.querySelector('.month-title').innerText.split(' - ')[0])) ? 'block' : 'none';
+        });
+    }
+
+    // Open modal for adding an event
+    document.querySelectorAll('.calendar-cell').forEach(cell => {
+        cell.addEventListener('click', function() {
+            const date = this.getAttribute('data-date');
+            if (date) {
+                document.getElementById('event-date').value = date;
+                document.getElementById('selected-date').innerText = date;
+                document.getElementById('event-modal').style.display = 'block';
+            }
+        });
+    });
+
+    // Close modal
+    function closeEventModal() {
+        document.getElementById('event-modal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('event-modal');
+        if (event.target === modal) {
+            closeEventModal();
+        }
+    };
+
+    // Handle adding event from modal
+    document.getElementById('event-modal').querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the default form submission
+        const eventName = this.event_name.value;
+        const eventDate = this.event_date.value;
+
+        if (eventName && eventDate) {
+            importantEvents.push({ name: eventName, date: eventDate }); // Add the event to the importantEvents array
+            closeEventModal(); // Close the modal
+            updateCalendarWithNewEvent(eventName, eventDate); // Update the calendar with the new event
+            saveEventsToLocalStorage(); // Save updated events to local storage
+        }
+    });
+
+    // Update the calendar UI with the new event
+    function updateCalendarWithNewEvent(eventName, eventDate) {
+        const cells = document.querySelectorAll('.calendar-cell');
+        cells.forEach(cell => {
+            if (cell.getAttribute('data-date') === eventDate) {
+                cell.innerHTML += `
+                    <div class="event-item" style="color: #FF6347; font-weight: bold;">
+                        🌟 ${eventName}
+                        <button class="remove-event" onclick="removeEvent('${eventName}', '${eventDate}', this)">❌</button>
+                    </div>`;
+            }
+        });
+    }
+
+    // Update the calendar with all saved events
+    function updateCalendarWithAllEvents() {
+        importantEvents.forEach(event => {
+            updateCalendarWithNewEvent(event.name, event.date);
+        });
+    }
+
+    // Remove event from the calendar
+    function removeEvent(eventName, eventDate, button) {
+        importantEvents = importantEvents.filter(event => event.name !== eventName || event.date !== eventDate); // Remove the event
+        saveEventsToLocalStorage(); // Save updated events to local storage
+        const cell = button.closest('.calendar-cell');
+        cell.removeChild(button.parentElement); // Remove the event item from the calendar cell
+    }
+
+    // Save events to local storage
+    function saveEventsToLocalStorage() {
+        localStorage.setItem('importantEvents', JSON.stringify(importantEvents));
+    }
+
+    // Check if all habits are completed and update the calendar
+    function checkAllHabitsCompleted(eventDate) {
+        const checkboxes = document.querySelectorAll('.habit-checkbox');
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        
+        if (allChecked) {
+            const cells = document.querySelectorAll('.calendar-cell');
+            cells.forEach(cell => {
+                if (cell.getAttribute('data-date') === eventDate) {
+                    cell.innerHTML += `<div style="color: green;">✅ All Habits Done!</div>`;
+                }
+            });
+        }
+    }
+
+    // Add event listener to habit checkboxes
+    function addHabitCheckboxListeners() {
+        document.querySelectorAll('.habit-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const date = document.getElementById('event-date').value; // Get the selected date
+                checkAllHabitsCompleted(date);
+            });
+        });
+    }
+
+    // Function to handle the "Done" button click
+    document.getElementById('submit-habits').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('.habit-checkbox');
+        const allCompleted = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+        if (allCompleted) {
+            const date = document.getElementById('selected-date').innerText; // Get the selected date
+            updateCalendarWithHabitsEmojis(date); // Update calendar with emojis
+        } else {
+            alert("Please complete all habits before submitting!"); // Alert if not all habits
+        }
+    });
+
+    // Update the calendar with habit emojis
+    function updateCalendarWithHabitsEmojis(date) {
+        const cells = document.querySelectorAll('.calendar-cell');
+        cells.forEach(cell => {
+            if (cell.getAttribute('data-date') === date) {
+                cell.innerHTML += `<div style="color: green;">🎉 All habits completed! 🎉</div>`;
+            }
+        });
+    }
+
+    // Unstrike habits in the calendar when a checkbox is unchecked
+    function unstrikeHabits(date) {
+        const cells = document.querySelectorAll('.calendar-cell');
+        cells.forEach(cell => {
+            if (cell.getAttribute('data-date') === date) {
+                const message = cell.querySelector('div[style*="color: green;"]');
+                if (message) {
+                    cell.removeChild(message); // Remove the "All habits completed!" message
+                }
+            }
+        });
+    }
+</script>
+
+
+
+
+
+{% endblock %}
