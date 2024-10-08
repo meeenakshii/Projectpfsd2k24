@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<h1 class="profile-title">Profile Page</h1>
+
+<div class="profile-container">
+    <div class="profile-info" style="color: #333;">
+        <h2>User Information</h2>
+        <h1>{{ user.username }}'s Profile</h1>
+        <p>Profile Image: {{ user.profile_image }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+    </div>
+
+    <div class="profile-actions" style="color: #333;">
+        <h3>Actions</h3>
+        <ul>
+            <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f2f2f2;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .profile-title {
+        margin-top: 60px;
+        font-size: 2.2em;
+        color: #333;
+        text-align: center;
+    }
+
+    .profile-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-info {
+        margin-bottom: 20px;
+    }
+
+    .profile-actions h2 {
+        margin-top: 30px;
+    }
+
+    .profile-actions ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .profile-actions li {
+        margin-bottom: 10px;
+    }
+
+    .profile-actions a {
+        text-decoration: none;
+        color: #007BFF;
+    }
+
+    .profile-actions a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

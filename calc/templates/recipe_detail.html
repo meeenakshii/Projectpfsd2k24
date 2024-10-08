@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% include 'navbar.html' %}
+<div style="margin: 80px 0.3in 0 0.3in;">  <!-- Added margin for navbar and left-right spacing -->
+    <h1 style="font-size: 2em; color: darkgreen; text-align: center;">{{ recipe.name }}</h1>  <!-- Styled recipe name -->
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">  <!-- Flexbox for layout with margin-top for space -->
+        <!-- Left section for ingredients -->
+        <div style="flex-grow: 1; margin-right: 20px;">
+            <h3 style="color: darkgreen;">Ingredients:</h3>
+            <p>{{ recipe.ingredients|linebreaks }}</p>  <!-- Ensure ingredients display in separate lines -->
+        </div>
+
+        <!-- Right section for the image -->
+        <div style="flex-shrink: 0;">
+            {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">  <!-- Styling for image -->
+            {% else %}
+                <p>No Image Available</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Process Section -->
+    <h3 style="color: darkgreen; margin-top: 30px;">Process:</h3>
+    <p>{{ recipe.process|linebreaks }}</p>  <!-- Display the process with line breaks -->
+
+    <!-- Recipe Details Section (Cooking time, servings, etc.) -->
+    <div style="font-size: 0.9em; margin-top: 15px;">  <!-- Inline CSS to reduce font size and added margin-top for spacing -->
+        <strong>Cooking Time:</strong> {{ recipe.cooking_time }} minutes |
+        <strong>Servings:</strong> {{ recipe.servings }} |
+        <strong>Protein:</strong> {{ recipe.protein }} g |
+        <strong>Carbohydrates:</strong> {{ recipe.carbohydrates }} g |
+        <strong>Calories:</strong> {{ recipe.calories }} kcal |
+        <strong>Category:</strong> {{ recipe.category }}
+    </div>
+
+    <!-- Return to Recipes Button -->
+    <div style="margin-top: 30px; text-align: left;">  <!-- Centered and added margin-top for spacing -->
+        <a href="{% url 'recipes' %}">
+            <button type="button" style="background-color: darkgreen; color: white; padding: 10px 20px; font-size: 1.1em; border-radius: 5px; border: none;">Return to Recipes</button>
+        </a>
+    </div>
+</div>
+{% endblock %}

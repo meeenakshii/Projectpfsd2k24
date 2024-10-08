@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="register-container">
+    <h2 class="register-title">Create Your Account</h2>
+
+    <!-- Registration form -->
+    <form method="POST" action="" class="register-form">
+        {% csrf_token %}
+        
+        <!-- Form fields -->
+        <div class="form-group">
+            <label class="field-label">{{ form.username.label }}</label>  
+            <div class="username-field">
+                {{ form.username }}  <!-- Username field -->
+                {% if form.username.errors %}
+                    <div class="error-message">{{ form.username.errors|first }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="field-label">{{ form.password1.label }}</label>  
+            <div class="password-field">
+                {{ form.password1 }}  <!-- Password field -->
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password1')">
+                    &#x1F441;  <!-- Eye symbol for show/hide -->
+                </button>
+                {% if form.password1.errors %}
+                    <div class="error-message">{{ form.password1.errors|first }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="field-label">{{ form.password2.label }}</label>  
+            <div class="password-field">
+                {{ form.password2 }}  <!-- Confirm Password field -->
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password2')">
+                    &#x1F441;  <!-- Eye symbol for show/hide -->
+                </button>
+                {% if form.password2.errors %}
+                    <div class="error-message">{{ form.password2.errors|first }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Register button -->
+        <button type="submit" class="register-button">
+            Join Now
+        </button>
+    </form>
+
+    <!-- Success or error messages -->
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="feedback">{{ message }}</div>
+        {% endfor %}
+    </div>
+
+    <!-- Username and Password rules -->
+    <div class="rules-container">
+        <h3>Username & Password Rules</h3>
+        <ul>
+            <li>Username must be at least 4 characters long.</li>
+            <li>Password must be at least 8 characters long, containing letters, numbers, and special symbols.</li>
+            <li>Password and confirmation must match.</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    /* Container for the registration form */
+    .register-container {
+        max-width: 500px; /* Increased width */
+        margin: 100px auto;
+        padding: 40px; /* Increased padding */
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        border: 1px solid #ccc; /* Added border */
+    }
+
+    /* Registration title */
+    .register-title {
+        font-size: 2em; /* Increased font size */
+        color: #444;
+        margin-bottom: 25px;
+    }
+
+    /* Field labels */
+    .field-label {
+        font-size: 1em; /* Font size for labels */
+        color: black; /* Set label color to black */
+        text-align: left; /* Align text to the left */
+        margin-bottom: 5px; /* Space between label and input */
+    }
+
+    /* Form styling */
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Increased gap between fields */
+    }
+
+    .register-form input {
+        padding: 12px; /* Increased padding */
+        font-size: 1em; /* Increased font size */
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        width: calc(100% - 40px); /* Adjusted for padding */
+        margin: 0 auto; /* Center align */
+        color: black; /* Set text color to black */
+    }
+
+    /* Password field styling */
+    .password-field {
+        position: relative; /* Relative position for toggle button */
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 20px; /* Moved slightly to the left */
+        top: 12px; /* Centered vertically */
+        background-color: transparent;
+        border: none;
+        cursor: pointer; /* Ensure cursor is set to pointer */
+        font-size: 1.2em; /* Larger eye symbol */
+        color: #006400;
+    }
+
+    /* Register button */
+    .register-button {
+        padding: 12px 18px; /* Increased padding */
+        background-color: #006400;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.2em; /* Increased font size */
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+    }
+
+    .register-button:hover {
+        background-color: #4CAF50;
+    }
+
+    /* Message container styling */
+    .message-container {
+        margin-top: 15px;
+    }
+
+    /* Feedback styling */
+    .feedback {
+        color: #006400;
+        font-size: 0.9em;
+    }
+
+    /* Error message styling */
+    .error-message {
+        color: red; /* Red color for error messages */
+        font-size: 0.9em; /* Smaller font size for errors */
+        margin-top: 5px; /* Space above the error message */
+    }
+
+    /* Username and Password rules */
+    .rules-container {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+    .rules-container h3 {
+        font-size: 1.2em;
+        color: #444;
+    }
+
+    .rules-container ul {
+        font-size: 0.9em;
+        color: #555;
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    .rules-container li {
+        margin-bottom: 8px;
+    }
+</style>
+
+<script>
+    function togglePasswordVisibility(fieldName) {
+        const field = document.querySelector(`input[name="${fieldName}"]`);
+        const fieldType = field.getAttribute('type');
+        field.setAttribute('type', fieldType === 'password' ? 'text' : 'password');
+    }
+</script>
+
+{% endblock %}

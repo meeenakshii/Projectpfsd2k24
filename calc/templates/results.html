@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+<h1 class="quiz-results-title">Quiz Results</h1>
+
+<style>
+    body {
+        background-color: #00000017;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .quiz-results-title {
+        margin-left: 1.5in;
+        margin-top: 60px;
+        font-size: 2.2em;
+        color: #ffffff7b;
+    }
+
+    .content {
+        margin-top: 80px;
+    }
+
+    table {
+        margin-left: 1in;
+        border: 1px solid #2c3d4e;
+        border-collapse: collapse;
+        width: 80%;
+        background-color: #0000002f;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .timetable-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-left: 0.0in;  /* Adjust this value as needed */
+    }
+
+    th, td {
+        border: 1px solid #00000057;
+        padding: 15px;
+        text-align: center;
+        font-size: 1em;
+    }
+
+    th {
+        background-color: #394e3ba1;
+        color: white;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #0000004a;
+    }
+
+    .analysis {
+        margin-left: 1in;
+        margin-top: 40px;
+        font-size: 1.1em;
+        background-color: #f0f0f05a;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .analysis-title {
+        font-size: 1.4em;
+        color: #264734;
+    }
+
+    .analysis-content {
+        margin-top: 15px;
+        font-size: 1.1em;
+    }
+
+    .routine {
+        margin-left: 1in;
+        margin-top: 40px;
+        font-size: 1.1em;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .routine-title {
+        font-size: 1.4em;
+        color: #264734;
+    }
+
+    .timetable {
+        margin-top: 20px;
+    }
+
+    .timetable-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .timetable-table th,
+    .timetable-table td {
+        border: 1px solid #00000057;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .timetable-table th {
+        background-color: #394e3ba1;
+        color: white;
+    }
+</style>
+<script>
+    document.getElementById('quiz-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting right away
+
+        // Get the selected productive time from the form
+        const productivity = document.getElementById('productive-time').value;
+
+        // You can store this value in a hidden input if you need to send it to the server
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'productivity';
+        hiddenInput.value = productivity;
+
+        // Append hidden input to form
+        this.appendChild(hiddenInput);
+
+        // Now submit the form
+        this.submit();
+    });
+</script>
+
+<!-- Analysis Section -->
+<div class="analysis">
+    <h2 class="analysis-title">Personalized Routine Analysis</h2>
+    <div class="analysis-content">
+        {% if productivity == 'morning' %}
+            <p>You are most productive in the morning. It's recommended to structure your routine so that important tasks are completed early in the day. Consider focusing on high-priority tasks first thing after waking up.</p>
+        {% elif productivity == 'evening' %}
+            <p>You tend to be more productive in the evening. Scheduling your most demanding tasks later in the day may be beneficial for your routine. Evening workouts or creative activities might suit you well.</p>
+        {% else %}
+            <p>Your productivity varies throughout the day. It’s useful to break your work into time blocks and experiment with different times of day to find your most effective working hours.</p>
+        {% endif %}
+
+        {% if goal == 'promotion' %}
+            <p>Your primary goal is to get a promotion. Focus on upskilling, improving your visibility at work, and balancing your professional growth with personal health.</p>
+        {% elif goal == 'skills' %}
+            <p>Improving skills and education is a key focus for you. Incorporate learning time into your routine, whether it's through online courses, reading, or practicing specific skills.</p>
+        {% elif goal == 'switching_careers' %}
+            <p>Switching careers is a big step. Consider allocating time daily to explore new industries, network, and develop the skills required for your transition.</p>
+        {% endif %}
+        
+        <p>It seems that you would benefit from improving your time management. Scheduling regular breaks and maintaining a consistent routine can help increase your efficiency and work-life balance.</p>
+    </div>
+</div>
+
+<!-- Personalized Routine Section -->
+<div class="routine">
+    <h2 class="routine-title">Your Personalized Daily Routine</h2>
+    <div class="timetable">
+        <table class="timetable-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if productivity == 'morning' %}
+                    <tr>
+                        <td>5:00 AM</td>
+                        <td>Wake Up & Drink Water</td>
+                    </tr>
+                    <tr>
+                        <td>5:30 AM</td>
+                        <td>Morning Exercise (Yoga/Running)</td>
+                    </tr>
+                    <tr>
+                        <td>6:00 AM</td>
+                        <td>Shower & Get Ready</td>
+                    </tr>
+                    <tr>
+                        <td>6:30 AM</td>
+                        <td>Breakfast</td>
+                    </tr>
+                    <tr>
+                        <td>7:00 AM</td>
+                        <td>Plan Day & Review Goals</td>
+                    </tr>
+                    <tr>
+                        <td>7:30 AM</td>
+                        <td>Commute to Work</td>
+                    </tr>
+                    <tr>
+                        <td>8:00 AM</td>
+                        <td>Start Work</td>
+                    </tr>
+                    <tr>
+                        <td>12:00 PM</td>
+                        <td>Lunch</td>
+                    </tr>
+                    <tr>
+                        <td>5:00 PM</td>
+                        <td>Commute Home</td>
+                    </tr>
+                    <tr>
+                        <td>5:30 PM</td>
+                        <td>Evening Exercise (Walk/Workout)</td>
+                    </tr>
+                    <tr>
+                        <td>6:00 PM</td>
+                        <td>Dinner</td>
+                    </tr>
+                    <tr>
+                        <td>7:00 PM</td>
+                        <td>Hobby Time (Reading, Art, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 PM</td>
+                        <td>Wind Down & Relax</td>
+                    </tr>
+                    <tr>
+                        <td>10:00 PM</td>
+                        <td>Sleep</td>
+                    </tr>
+                {% elif productivity == 'evening' %}
+                    <tr>
+                        <td>7:00 AM</td>
+                        <td>Wake Up & Drink Water</td>
+                    </tr>
+                    <tr>
+                        <td>7:30 AM</td>
+                        <td>Morning Routine (Shower, Get Ready)</td>
+                    </tr>
+                    <tr>
+                        <td>8:00 AM</td>
+                        <td>Breakfast</td>
+                    </tr>
+                    <tr>
+                        <td>8:30 AM</td>
+                        <td>Plan Day & Review Goals</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 AM</td>
+                        <td>Commute to Work</td>
+                    </tr>
+                    <tr>
+                        <td>9:30 AM</td>
+                        <td>Start Work</td>
+                    </tr>
+                    <tr>
+                        <td>12:00 PM</td>
+                        <td>Lunch</td>
+                    </tr>
+                    <tr>
+                        <td>5:00 PM</td>
+                        <td>Commute Home</td>
+                    </tr>
+                    <tr>
+                        <td>5:30 PM</td>
+                        <td>Evening Exercise (Gym/Workout)</td>
+                    </tr>
+                    <tr>
+                        <td>6:00 PM</td>
+                        <td>Dinner</td>
+                    </tr>
+                    <tr>
+                        <td>7:00 PM</td>
+                        <td>Hobby Time (Games, Movies, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 PM</td>
+                        <td>Focus on Personal Projects</td>
+                    </tr>
+                    <tr>
+                        <td>10:30 PM</td>
+                        <td>Wind Down & Relax</td>
+                    </tr>
+                    <tr>
+                        <td>11:00 PM</td>
+                        <td>Sleep</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>7:00 AM</td>
+                        <td>Wake Up & Drink Water</td>
+                    </tr>
+                    <tr>
+                        <td>7:30 AM</td>
+                        <td>Morning Routine (Shower, Get Ready)</td>
+                    </tr>
+                    <tr>
+                        <td>8:00 AM</td>
+                        <td>Breakfast</td>
+                    </tr>
+                    <tr>
+                        <td>8:30 AM</td>
+                        <td>Plan Day & Review Goals</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 AM</td>
+                        <td>Commute to Work</td>
+                    </tr>
+                    <tr>
+                        <td>9:30 AM</td>
+                        <td>Start Work</td>
+                    </tr>
+                    <tr>
+                        <td>12:00 PM</td>
+                        <td>Lunch</td>
+                    </tr>
+                    <tr>
+                        <td>5:00 PM</td>
+                        <td>Commute Home</td>
+                    </tr>
+                    <tr>
+                        <td>5:30 PM</td>
+                        <td>Exercise (Walk/Workout)</td>
+                    </tr>
+                    <tr>
+                        <td>6:00 PM</td>
+                        <td>Dinner</td>
+                    </tr>
+                    <tr>
+                        <td>7:00 PM</td>
+                        <td>Skill Development (Courses, Reading)</td>
+                    </tr>
+                    <tr>
+                        <td>9:00 PM</td>
+                        <td>Hobby Time (Creative Activities)</td>
+                    </tr>
+                    <tr>
+                        <td>10:30 PM</td>
+                        <td>Wind Down & Relaxx</td>
+                    </tr>
+                    <tr>
+                        <td>11:00 PM</td>
+                        <td>Sleep</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+                   

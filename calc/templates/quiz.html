@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="quiz-container">
+    <h1 class="quiz-title">Quiz Time!</h1>
+    <p class="quiz-description">Answer the following questions:</p>
+
+    <form action="{% url 'submit_quiz' %}" method="POST" class="quiz-form">
+        {% csrf_token %}
+
+        <!-- Question Blocks -->
+        <div class="question-block">
+            <label>What time do you usually wake up?</label>
+            <select id="wake-up-time" name="question1">
+                <option value="A">5 AM to 7 AM</option>
+                <option value="B">After 8 AM</option>
+                <option value="C">12 PM</option>
+                <option value="D">After 12 PM</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>What are your typical shift hours?</label>
+            <select id="shift-hours" name="question2">
+                <option value="A">Morning shift (7:00 AM - 3:00 PM)</option>
+                <option value="B">Afternoon shift (3:00 PM - 11:00 PM)</option>
+                <option value="C">Night shift (11:00 PM - 7:00 AM)</option>
+                <option value="D">Rotating shifts</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>How many hours of sleep do you aim for?</label>
+            <select id="sleep-hours" name="question3">
+                <option value="A">Less than 6 hours</option>
+                <option value="B">6-7 hours</option>
+                <option value="C">7-8 hours</option>
+                <option value="D">8+ hours</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>When do you prefer to do physical activity?</label>
+            <select id="physical-activity" name="question4">
+                <option value="A">Before work</option>
+                <option value="B">After work</option>
+                <option value="C">Midday</option>
+                <option value="D">No preference</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>What goal do you prefer in the following?</label>
+            <select id="goal" name="question5">
+                <option value="A">Hobbies and personal time</option>
+                <option value="B">Studies</option>
+                <option value="C">Focus on health</option>
+                <option value="D">Sports</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>How would you like to enjoy your evenings?</label>
+            <select id="evening-preference" name="question6">
+                <option value="A">Calm and relaxed</option>
+                <option value="B">Gym and fitness</option>
+                <option value="C">Work and sleep (studies)</option>
+                <option value="D">Movies and chill</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>How long are your breaks?</label>
+            <select id="break-duration" name="question7">
+                <option value="A">15 minutes</option>
+                <option value="B">30 minutes</option>
+                <option value="C">45 minutes</option>
+                <option value="D">1 hour</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>When do you prefer to have your meals on off days?</label>
+            <select id="meal-time" name="question8">
+                <option value="A">Regular times (morning, afternoon, evening)</option>
+                <option value="B">Same as shift schedule</option>
+                <option value="C">Flexible depending on how you feel</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>When do you take short breaks during your shift?</label>
+            <select id="short-breaks" name="question9">
+                <option value="A">Every 1-2 hours</option>
+                <option value="B">Every 3-4 hours</option>
+                <option value="C">Only once or twice during shift</option>
+                <option value="D">No breaks</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>What’s your biggest time-management challenge?</label>
+            <select id="time-management" name="question10">
+                <option value="A">Balancing sleep and work</option>
+                <option value="B">Finding time for exercise</option>
+                <option value="C">Meal planning</option>
+                <option value="D">Managing personal tasks</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>Do you have any relaxation time during the day?</label>
+            <select id="relaxation-time" name="question11">
+                <option value="A">Before work</option>
+                <option value="B">After work</option>
+                <option value="C">Midday</option>
+                <option value="D">I don’t prioritize relaxation</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>How do you commute to your workplace?</label>
+            <select id="commute" name="question12">
+                <option value="A">Walking</option>
+                <option value="B">Public transport</option>
+                <option value="C">Driving</option>
+                <option value="D">Work from home</option>
+            </select>
+        </div>
+
+        <div class="question-block">
+            <label>When do you feel mostly creative and productive?</label>
+            <select id="productive-time" name="question13">
+                <option value="A">Mornings</option>
+                <option value="B">Nights</option>
+                <option value="C">Evenings</option>
+                <option value="D">Depends on mood</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-button">Submit Quiz</button>
+    </form>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f4f84d;
+    }
+
+    .quiz-container {
+        padding: 30px;
+        background-color: #ffffff83;
+        width: 90%;
+        max-width: 100%;
+        margin: 50px auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        color: #444;
+    }
+
+    .quiz-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+    }
+
+    .quiz-description {
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 1.2em;
+        color: #7f8c8d;
+    }
+
+    .question-block {
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color: #ecf0f1;
+        border-radius: 8px;
+    }
+
+    .question-block label {
+        margin-bottom: 10px;
+        font-size: 1.3em;
+        color: #34495e;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Button styling */
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2em;
+        background-color: #556b7ad8;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+        background-color: #3498db;
+    }
+
+    /* Additional styling for hover states */
+    .question-block:hover {
+        background-color: #dfe6e9;
+    }
+
+</style>
+{% endblock %}
