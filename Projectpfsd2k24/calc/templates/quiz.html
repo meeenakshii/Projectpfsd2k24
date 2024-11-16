@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="quiz-container">
+    <h1 class="quiz-title">Quiz Time!</h1>
+    <p class="quiz-description">Answer the following questions:</p>
+
+    <form action="{% url 'submit_quiz' %}" method="POST" class="quiz-form">
+        {% csrf_token %}
+
+        <!-- Question Blocks -->
+        <div class="question-block">
+            <h3>1. What time do you usually start work or your daily tasks?</h3>
+            <input type="radio" name="question1" value="A"> A) Before 7 AM<br>
+            <input type="radio" name="question1" value="B"> B) 7 AM - 9 AM<br>
+            <input type="radio" name="question1" value="C"> C) 9 AM - 11 AM<br>
+            <input type="radio" name="question1" value="D"> D) After 11 AM<br>
+        </div>
+
+        <div class="question-block">
+            <h3>2. How many hours do you typically work each day?</h3>
+            <input type="radio" name="question2" value="A"> A) Less than 4 hours<br>
+            <input type="radio" name="question2" value="B"> B) 4-6 hours<br>
+            <input type="radio" name="question2" value="C"> C) 6-8 hours<br>
+            <input type="radio" name="question2" value="D"> D) More than 8 hours<br>
+        </div>
+
+        <div class="question-block">
+            <h3>3. Are you more productive in the morning or evening?</h3>
+            <input type="radio" name="question3" value="A"> A) Morning<br>
+            <input type="radio" name="question3" value="B"> B) Afternoon<br>
+            <input type="radio" name="question3" value="C"> C) Evening<br>
+            <input type="radio" name="question3" value="D"> D) I don't have a specific time<br>
+        </div>
+
+        <div class="question-block">
+            <h3>4. What is your primary professional goal for the next year?</h3>
+            <input type="radio" name="question4" value="A"> A) Getting a promotion<br>
+            <input type="radio" name="question4" value="B"> B) Switching careers<br>
+            <input type="radio" name="question4" value="C"> C) Improving skills or education<br>
+            <input type="radio" name="question4" value="D"> D) Starting my own business<br>
+        </div>
+
+        <div class="question-block">
+            <h3>5. How do you prefer to structure your workday?</h3>
+            <input type="radio" name="question5" value="A"> A) Block scheduling with set tasks<br>
+            <input type="radio" name="question5" value="B"> B) Flexible with to-do lists<br>
+            <input type="radio" name="question5" value="C"> C) A mix of both<br>
+            <input type="radio" name="question5" value="D"> D) I go with the flow<br>
+        </div>
+
+        <div class="question-block">
+            <h3>6. How do you like to unwind after work?</h3>
+            <input type="radio" name="question6" value="A"> A) Exercise or outdoor activities<br>
+            <input type="radio" name="question6" value="B"> B) Socializing with friends or family<br>
+            <input type="radio" name="question6" value="C"> C) Hobbies or personal projects<br>
+            <input type="radio" name="question6" value="D"> D) Watching TV or playing video games<br>
+        </div>
+
+        <div class="question-block">
+            <h3>7. How often do you set personal goals?</h3>
+            <input type="radio" name="question7" value="A"> A) Daily<br>
+            <input type="radio" name="question7" value="B"> B) Weekly<br>
+            <input type="radio" name="question7" value="C"> C) Monthly<br>
+            <input type="radio" name="question7" value="D"> D) Rarely<br>
+        </div>
+
+        <div class="question-block">
+            <h3>8. How do you typically prepare for the next day?</h3>
+            <input type="radio" name="question8" value="A"> A) Planning my schedule the night before<br>
+            <input type="radio" name="question8" value="B"> B) Writing a to-do list<br>
+            <input type="radio" name="question8" value="C"> C) I don’t usually prepare<br>
+            <input type="radio" name="question8" value="D"> D) I like to keep it spontaneous<br>
+        </div>
+
+        <div class="question-block">
+            <h3>9. Do you prefer working alone or in a team?</h3>
+            <input type="radio" name="question9" value="A"> A) Alone<br>
+            <input type="radio" name="question9" value="B"> B) In a small team<br>
+            <input type="radio" name="question9" value="C"> C) In larger teams<br>
+            <input type="radio" name="question9" value="D"> D) It depends on the task<br>
+        </div>
+
+        <div class="question-block">
+            <h3>10. What would you like to improve in your daily routine?</h3>
+            <input type="radio" name="question10" value="A"> A) Time management<br>
+            <input type="radio" name="question10" value="B"> B) Work-life balance<br>
+            <input type="radio" name="question10" value="C"> C) Health and fitness<br>
+            <input type="radio" name="question10" value="D"> D) Skill development<br>
+        </div>
+
+        <div class="question-block">
+            <h3>11. What time of day do you usually feel most creative?</h3>
+            <input type="radio" name="question11" value="A"> A) Early morning<br>
+            <input type="radio" name="question11" value="B"> B) Late morning<br>
+            <input type="radio" name="question11" value="C"> C) Afternoon<br>
+            <input type="radio" name="question11" value="D"> D) Evening or night<br>
+        </div>
+
+        <div class="question-block">
+            <h3>12. What would you like to incorporate more into your daily routine?</h3>
+            <input type="radio" name="question12" value="A"> A) More breaks<br>
+            <input type="radio" name="question12" value="B"> B) Mindfulness or meditation<br>
+            <input type="radio" name="question12" value="C"> C) Physical activity<br>
+            <input type="radio" name="question12" value="D"> D) Social interactions<br>
+        </div>
+
+        <div class="question-block">
+            <h3>13. How often do you reflect on your work-life balance?</h3>
+            <input type="radio" name="question13" value="A"> A) Regularly<br>
+            <input type="radio" name="question13" value="B"> B) Occasionally<br>
+            <input type="radio" name="question13" value="C"> C) Rarely<br>
+            <input type="radio" name="question13" value="D"> D) I don't think about it<br>
+        </div>
+
+        <!-- Add the rest of the questions similarly -->
+
+        <button type="submit" class="submit-button">Submit Quiz</button>
+    </form>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f4f84d;
+    }
+
+    .quiz-container {
+        padding: 30px;
+        background-color: #ffffff83;
+        width: 90%;
+        max-width: 100%;
+        margin: 50px auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        color: #444;
+    }
+
+    .quiz-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+    }
+
+    .quiz-description {
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 1.2em;
+        color: #7f8c8d;
+    }
+
+    .question-block {
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color: #ecf0f1;
+        border-radius: 8px;
+    }
+
+    .question-block h3 {
+        margin-bottom: 10px;
+        font-size: 1.3em;
+        color: #34495e;
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .question-block input[type="radio"] + label {
+        font-size: 1.1em;
+        color: #2c3e50;
+    }
+
+    /* Option styling */
+    input[type="radio"]:checked + label {
+        color: #27ae60; /* Green when selected */
+        font-weight: bold;
+    }
+
+    /* Button styling */
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2em;
+        background-color: #556b7ad8;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+        background-color: #3498db;
+    }
+
+    /* Additional styling for hover states */
+    .question-block:hover {
+        background-color: #dfe6e9;
+    }
+
+</style>
+{% endblock %}

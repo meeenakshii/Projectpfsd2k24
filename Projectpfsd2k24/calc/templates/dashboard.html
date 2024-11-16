@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 style="text-align: center;">User Dashboard</h1>
+
+<div style="text-align: center; margin-top: 20px;">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+</div>
+
+<h3 style="text-align: center; margin-top: 40px;">Your Daily Habits</h3>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px;">
+    {% for habit in habits %}
+    <div style="text-align: center; width: 200px; background-color: #f7f7f7; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h4 style="color: rgb(64, 88, 64);">{{ habit.name }}</h4>
+        <p><strong>Progress:</strong> {{ habit.progress }}%</p>
+        <p><strong>Status:</strong> {% if habit.completed %} Completed {% else %} In Progress {% endif %}</p>
+    </div>
+    {% empty %}
+    <p>No habits found for today.</p>
+    {% endfor %}
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-success">Home Window</button></a>
+</div>
+
+{% endblock %}

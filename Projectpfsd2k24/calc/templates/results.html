@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+<h1 class="quiz-results-title">Quiz Results</h1>
+
+<style>
+    body {
+        background-color: #00000017; /* Light background for the entire page */
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Title Styling */
+    .quiz-results-title {
+        margin-left: 1.5in;
+        margin-top: 60px;
+        font-size: 2.2em;
+        color: #ffffff7b;
+    }
+
+    /* Add some spacing at the top for the navbar */
+    .content {
+        margin-top: 80px;
+    }
+
+    table {
+        margin-left: 1in;
+        border: 1px solid #2c3d4e;
+        border-collapse: collapse;
+        width: 80%;
+        background-color: #0000002f;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        border: 1px solid #00000057;
+        padding: 15px;
+        text-align: center;
+        font-size: 1em;
+    }
+
+    /* Header Styling */
+    th {
+        background-color: #394e3ba1;
+        color: white;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .question-cell {
+        border-right: 2px solid #0000002a;
+    }
+
+    .header-separator {
+        border-bottom: 2px solid #000000;
+    }
+
+    /* Styling for Answer Options */
+    .option-cell {
+        border-right: 2px solid #00000019;
+        background-color: #00000018;
+    }
+
+    .option-cell:last-child {
+        border-right: none;
+    }
+
+    .first-option-cell {
+        border-left: 2px solid #34495e4a;
+    }
+
+    .qno-cell {
+        background-color: #0000003a;
+        font-weight: bold;
+    }
+
+    .question-separator {
+        border-bottom: 2px solid #34495e27;
+    }
+
+    /* Checkmark styling */
+    .checkmark {
+        color: #264734;
+        font-size: 1.5em;
+    }
+
+    /* Alternating row color */
+    tbody tr:nth-child(even) {
+        background-color: #0000004a;
+    }
+
+    /* Additional padding for better readability */
+    td {
+        padding: 12px;
+    }
+</style>
+
+<div class="content">
+    <table>
+        <thead>
+            <tr class="header-separator">
+                <th class="qno-cell">Q.no</th>
+                <th>Question</th>
+                <th class="first-option-cell option-cell">A</th>
+                <th class="option-cell">B</th>
+                <th class="option-cell">C</th>
+                <th class="option-cell">D</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr class="question-separator">
+                <td class="qno-cell">{{ question.id }}</td>
+                <td>{{ question.question }}</td>
+                <td class="first-option-cell option-cell">
+                    {% if user_answers|get_item:question.id == 'A' %}
+                    <span class="checkmark">&#10004;</span> <!-- Check mark for A -->
+                    {% endif %}
+                </td>
+                <td class="option-cell">
+                    {% if user_answers|get_item:question.id == 'B' %}
+                    <span class="checkmark">&#10004;</span> <!-- Check mark for B -->
+                    {% endif %}
+                </td>
+                <td class="option-cell">
+                    {% if user_answers|get_item:question.id == 'C' %}
+                    <span class="checkmark">&#10004;</span> <!-- Check mark for C -->
+                    {% endif %}
+                </td>
+                <td class="option-cell">
+                    {% if user_answers|get_item:question.id == 'D' %}
+                    <span class="checkmark">&#10004;</span> <!-- Check mark for D -->
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="border-bottom: 2px solid #34495e;"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

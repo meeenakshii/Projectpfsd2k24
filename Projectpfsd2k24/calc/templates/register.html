@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+<!-- Background image and overlay -->
+<div class="background"></div>
+<div class="overlay"></div>
+
+<div class="register-container">
+    <h2 class="register-title">Create Your Account</h2>
+
+    <!-- Registration form -->
+    <form method="POST" action="" class="register-form">
+        {% csrf_token %}
+        
+        <!-- Form fields -->
+        <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+
+        <div class="password-container">
+            <div class="form-group">
+                {{ form.password1.label_tag }}
+                <div class="password-field">
+                    {{ form.password1 }}  <!-- Password field -->
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password1')">
+                        &#x1F441;  <!-- Eye symbol for show/hide -->
+                    </button>
+                </div>
+                <div id="passwordFeedback" class="feedback-message">
+                    <span id="feedbackText"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.password2.label_tag }}
+                <div class="password-field">
+                    {{ form.password2 }}  <!-- Confirm Password field -->
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password2')">
+                        &#x1F441;  <!-- Eye symbol for show/hide -->
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register button -->
+        <button type="submit" class="register-button">
+            Join Now
+        </button>
+    </form>
+
+    <!-- Success or error messages -->
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="feedback">{{ message }}</div>
+        {% endfor %}
+    </div>
+
+    <!-- Username and Password rules -->
+    <div class="rules-container">
+        <h3>Username & Password Rules</h3>
+        <ul>
+            <li>Username must be at least 4 characters long.</li>
+            <li>Password must be at least 8 characters long, containing letters, numbers, and special symbols.</li>
+            <li>Password and confirmation must match.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- JavaScript for live password validation and toggle visibility -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const passwordField = document.querySelector('input[name="password1"]');
+        const feedbackDiv = document.getElementById('passwordFeedback');
+        const feedbackText = document.getElementById('feedbackText');
+
+        passwordField.addEventListener('input', function() {
+            const password = passwordField.value;
+            const isValid = validatePassword(password);
+
+            if (isValid) {
+                feedbackText.textContent = "Strong password!";
+                feedbackText.style.color = "green";
+                feedbackDiv.style.display = "block"; // Ensure this is set to block
+            } else {
+                feedbackText.textContent = "Weak password. Use at least 8 characters with letters, numbers, and symbols.";
+                feedbackText.style.color = "red";
+                feedbackDiv.style.display = "block"; // Ensure this is set to block
+            }
+        });
+
+        function validatePassword(password) {
+            const minLength = 8;
+            const hasLetters = /[a-zA-Z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password);
+            const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            return password.length >= minLength && hasLetters && hasNumbers && hasSpecialChars;
+        }
+
+        window.togglePasswordVisibility = function(fieldName) {
+            console.log(`Toggling visibility for: ${fieldName}`); // Debugging line
+            const field = document.querySelector(`input[name="${fieldName}"]`);
+            const fieldType = field.getAttribute('type');
+            field.setAttribute('type', fieldType === 'password' ? 'text' : 'password');
+        };
+    });
+</script>
+
+<style>
+    /* Background image styling */
+    .background {
+        background-image: url("{% static 'images/homeb2.png' %}"); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    /* Overlay for darkening the background */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1); 
+        z-index: 0;
+    }
+
+    /* Container for the registration form */
+    .register-container {
+        position: relative;
+        z-index: 1;
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    /* Registration title */
+    .register-title {
+        font-size: 1.8em;
+        color: #444;
+        margin-bottom: 25px;
+    }
+
+    /* Form styling */
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .register-form input {
+        padding: 10px;
+        font-size: 0.9em;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .password-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .password-field {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer; /* Ensure cursor is set to pointer */
+        font-size: 1.2em; /* Larger eye symbol */
+        color: #006400;
+    }
+
+    /* Password feedback message */
+    .feedback-message {
+        display: none;
+        margin-top: 5px;
+    }
+
+    .feedback-message span {
+        font-size: 0.9em;
+    }
+
+    /* Register button */
+    .register-button {
+        padding: 10px 15px;
+        background-color: #006400;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+    }
+
+    .register-button:hover {
+        background-color: #4CAF50;
+    }
+
+    /* Message container styling */
+    .message-container {
+        margin-top: 15px;
+    }
+
+    /* Feedback styling */
+    .feedback {
+        color: #006400;
+        font-size: 0.9em;
+    }
+
+    /* Username and Password rules */
+    .rules-container {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+    .rules-container h3 {
+        font-size: 1.2em;
+        color: #444;
+    }
+
+    .rules-container ul {
+        font-size: 0.9em;
+        color: #555;
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    .rules-container li {
+        margin-bottom: 8px;
+    }
+</style>
+
+{% endblock %}
